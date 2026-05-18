@@ -19,7 +19,7 @@ jobs:
       - name: Lint with ruff
         run: ruff check mnemo/ tests/
       - name: Format check with black
-        run: black --check mnemo/ tests/
+        run: black --check --diff mnemo/ tests/
 
   test:
     runs-on: ubuntu-latest
