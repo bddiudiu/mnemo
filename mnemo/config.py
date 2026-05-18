@@ -13,6 +13,7 @@ Environment variables override defaults:
 import os
 from dataclasses import dataclass
 
+
 @dataclass
 class Config:
     # Storage
@@ -22,7 +23,9 @@ class Config:
 
     # Embedding
     embedding_provider: str = os.getenv("MNEMO_EMBEDDING_PROVIDER", "openai")
-    openai_api_key: str = os.getenv("MNEMO_OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+    openai_api_key: str = os.getenv(
+        "MNEMO_OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", "")
+    )
     embedding_model: str = os.getenv("MNEMO_EMBEDDING_MODEL", "text-embedding-3-small")
 
     # Server
@@ -32,12 +35,12 @@ class Config:
     # Memory limits
     max_context_tokens: int = int(os.getenv("MNEMO_MAX_CONTEXT_TOKENS", "65536"))
     compress_threshold: float = 0.8  # trigger auto-compress at 80% capacity
-    default_top_k: int = 10          # default recall count
+    default_top_k: int = 10  # default recall count
     max_episodic_per_session: int = 1000
 
     # TTL defaults (seconds)
-    working_memory_ttl: int = 3600          # 1 hour
-    episodic_memory_ttl: int = 86400 * 30   # 30 days
+    working_memory_ttl: int = 3600  # 1 hour
+    episodic_memory_ttl: int = 86400 * 30  # 30 days
     semantic_memory_ttl: int = 86400 * 365  # 1 year
 
 

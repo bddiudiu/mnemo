@@ -103,11 +103,13 @@ async def recall_memories(req: MemoryRecallRequest):
             top_k=req.top_k,
         )
         for mem in wm_results:
-            results.append(RecallResult(
-                memory=_to_response(mem),
-                score=0.8,  # working memory always scores high for recency
-                recall_layer="working",
-            ))
+            results.append(
+                RecallResult(
+                    memory=_to_response(mem),
+                    score=0.8,  # working memory always scores high for recency
+                    recall_layer="working",
+                )
+            )
 
     # Layer 2: Episodic memory (vector similarity)
     if req.memory_type is None or req.memory_type.value == "episodic":
@@ -119,15 +121,17 @@ async def recall_memories(req: MemoryRecallRequest):
             min_confidence=req.min_confidence,
         )
         for mem, score in em_results:
-            results.append(RecallResult(
-                memory=_to_response(mem),
-                score=round(score, 4),
-                recall_layer="episodic",
-            ))
+            results.append(
+                RecallResult(
+                    memory=_to_response(mem),
+                    score=round(score, 4),
+                    recall_layer="episodic",
+                )
+            )
 
     # Sort by score descending
     results.sort(key=lambda x: x.score, reverse=True)
-    results = results[:req.top_k]
+    results = results[: req.top_k]
 
     return RecallResponse(
         results=results,
@@ -206,7 +210,7 @@ def _to_response(record) -> MemoryResponse:
         content=record.content,
         memory_type=record.memory_type,
         confidence=record.confidence,
-        metadata=getattr(record, 'metadata_', getattr(record, 'metadata', {})),
+        metadata=getattr(record, "metadata_", getattr(record, "metadata", {})),
         created_at=record.created_at,
         last_accessed_at=record.last_accessed_at,
         ttl=record.ttl,

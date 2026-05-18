@@ -29,6 +29,7 @@ logger = logging.getLogger("mnemo.mcp")
 
 # ── JSON-RPC helpers ────────────────────────────────────────────
 
+
 class MCPTransport:
     """MCP stdio transport — reads JSON-RPC from stdin, writes to stdout."""
 
@@ -45,7 +46,12 @@ class MCPTransport:
         except json.JSONDecodeError:
             return None
 
-    def send_response(self, request_id: Optional[int], result: Any = None, error: Optional[dict] = None) -> None:
+    def send_response(
+        self,
+        request_id: Optional[int],
+        result: Any = None,
+        error: Optional[dict] = None,
+    ) -> None:
         """Send a JSON-RPC response to stdout."""
         msg: dict[str, Any] = {"jsonrpc": "2.0"}
         if request_id is not None:
@@ -74,8 +80,15 @@ class MemoriMCPServer:
             "inputSchema": {
                 "type": "object",
                 "properties": {
-                    "content": {"type": "string", "description": "The memory content to store"},
-                    "memory_type": {"type": "string", "enum": ["working", "episodic", "semantic"], "default": "episodic"},
+                    "content": {
+                        "type": "string",
+                        "description": "The memory content to store",
+                    },
+                    "memory_type": {
+                        "type": "string",
+                        "enum": ["working", "episodic", "semantic"],
+                        "default": "episodic",
+                    },
                     "agent_id": {"type": "string", "default": "default"},
                     "confidence": {"type": "number", "default": 1.0},
                 },
@@ -114,7 +127,10 @@ class MemoriMCPServer:
             "inputSchema": {
                 "type": "object",
                 "properties": {
-                    "memory_id": {"type": "string", "description": "The memory ID to delete"},
+                    "memory_id": {
+                        "type": "string",
+                        "description": "The memory ID to delete",
+                    },
                     "agent_id": {"type": "string", "default": "default"},
                 },
                 "required": ["memory_id"],
@@ -199,7 +215,11 @@ class MemoriMCPServer:
                 data = resp.json()
                 self.transport.send_response(
                     req_id,
-                    {"content": [{"type": "text", "text": f"Stored memory: {data['id']}"}]},
+                    {
+                        "content": [
+                            {"type": "text", "text": f"Stored memory: {data['id']}"}
+                        ]
+                    },
                 )
 
             elif tool_name == "memori_recall":
@@ -218,7 +238,14 @@ class MemoriMCPServer:
                 ]
                 self.transport.send_response(
                     req_id,
-                    {"content": [{"type": "text", "text": "\n".join(lines) or "No memories found."}]},
+                    {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "\n".join(lines) or "No memories found.",
+                            }
+                        ]
+                    },
                 )
 
             elif tool_name == "memori_search":
@@ -231,23 +258,43 @@ class MemoriMCPServer:
                 resp.raise_for_status()
                 data = resp.json()
                 memories = data.get("memories", [])
-                lines = [f"[{i+1}] {m['content'][:200]}" for i, m in enumerate(memories)]
+                lines = [
+                    f"[{i+1}] {m['content'][:200]}" for i, m in enumerate(memories)
+                ]
                 self.transport.send_response(
                     req_id,
-                    {"content": [{"type": "text", "text": "\n".join(lines) or "No matches found."}]},
+                    {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "\n".join(lines) or "No matches found.",
+                            }
+                        ]
+                    },
                 )
 
             elif tool_name == "memori_forget":
-                resp = await self.http.delete(f"/api/v1/memories/{arguments['memory_id']}")
+                resp = await self.http.delete(
+                    f"/api/v1/memories/{arguments['memory_id']}"
+                )
                 success = resp.status_code == 204
                 self.transport.send_response(
                     req_id,
-                    {"content": [{"type": "text", "text": "Deleted." if success else "Memory not found."}]},
+                    {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Deleted." if success else "Memory not found.",
+                            }
+                        ]
+                    },
                 )
 
             elif tool_name == "memori_health":
                 resp = await self.http.get("/api/v1/health")
-                data = resp.json() if resp.status_code == 200 else {"status": "unhealthy"}
+                data = (
+                    resp.json() if resp.status_code == 200 else {"status": "unhealthy"}
+                )
                 self.transport.send_response(
                     req_id,
                     {"content": [{"type": "text", "text": json.dumps(data, indent=2)}]},
@@ -268,6 +315,8 @@ class MemoriMCPServer:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    )
     server = MemoriMCPServer()
     asyncio.run(server.run())

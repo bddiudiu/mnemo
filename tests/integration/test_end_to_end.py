@@ -67,17 +67,23 @@ async def test_search_memories(client):
         "Staging uses SQLite for testing",
         "User email is user@example.com",
     ]:
-        await client.post("/api/v1/memories", json={
-            "agent_id": "test-agent",
-            "content": content,
-            "memory_type": "episodic",
-        })
+        await client.post(
+            "/api/v1/memories",
+            json={
+                "agent_id": "test-agent",
+                "content": content,
+                "memory_type": "episodic",
+            },
+        )
 
     # Search
-    resp = await client.post("/api/v1/memories/search", json={
-        "agent_id": "test-agent",
-        "query": "PostgreSQL",
-    })
+    resp = await client.post(
+        "/api/v1/memories/search",
+        json={
+            "agent_id": "test-agent",
+            "query": "PostgreSQL",
+        },
+    )
     assert resp.status_code == 200
     data = resp.json()
     assert any("PostgreSQL" in m["content"] for m in data["memories"])
@@ -87,11 +93,14 @@ async def test_search_memories(client):
 async def test_list_memories(client):
     # Seed
     for i in range(3):
-        await client.post("/api/v1/memories", json={
-            "agent_id": "list-agent",
-            "content": f"Memory {i+1}",
-            "memory_type": "working",
-        })
+        await client.post(
+            "/api/v1/memories",
+            json={
+                "agent_id": "list-agent",
+                "content": f"Memory {i+1}",
+                "memory_type": "working",
+            },
+        )
 
     resp = await client.get("/api/v1/memories?agent_id=list-agent&limit=10")
     assert resp.status_code == 200
@@ -103,11 +112,14 @@ async def test_list_memories(client):
 
 @pytest.mark.asyncio
 async def test_delete_memory(client):
-    resp = await client.post("/api/v1/memories", json={
-        "agent_id": "test-agent",
-        "content": "To be deleted",
-        "memory_type": "episodic",
-    })
+    resp = await client.post(
+        "/api/v1/memories",
+        json={
+            "agent_id": "test-agent",
+            "content": "To be deleted",
+            "memory_type": "episodic",
+        },
+    )
     mem_id = resp.json()["id"]
 
     resp = await client.delete(f"/api/v1/memories/{mem_id}")
@@ -119,10 +131,13 @@ async def test_delete_memory(client):
 
 @pytest.mark.asyncio
 async def test_session_create_and_get(client):
-    resp = await client.post("/api/v1/sessions", json={
-        "agent_id": "test-agent",
-        "max_context_tokens": 4096,
-    })
+    resp = await client.post(
+        "/api/v1/sessions",
+        json={
+            "agent_id": "test-agent",
+            "max_context_tokens": 4096,
+        },
+    )
     assert resp.status_code == 201
     session = resp.json()
     assert session["agent_id"] == "test-agent"

@@ -82,16 +82,19 @@ class EpisodicMemory:
         provider = config.embedding_provider
         if provider == "openai" and config.openai_api_key:
             from mnemo.embedding.cloud import OpenAIEmbedder
+
             embedder = OpenAIEmbedder()
             return await embedder.embed(text)
         elif provider == "local":
             from mnemo.embedding.local import LocalEmbedder
+
             embedder = LocalEmbedder()
             return await embedder.embed(text)
         else:
             # Fallback: hash-based placeholder for testing
             # NOT for production — returns deterministic but useless vectors
             import hashlib
+
             h = hashlib.sha256(text.encode()).digest()
             # Normalize to 384-dim (text-embedding-3-small size)
             vec = [float(b) / 255.0 for b in h] * (384 // 32 + 1)

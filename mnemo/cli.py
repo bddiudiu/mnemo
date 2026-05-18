@@ -40,14 +40,17 @@ def main():
 
     if args.command == "serve":
         import uvicorn
+
         uvicorn.run("mnemo.api:app", host=args.host, port=args.port, reload=False)
     elif args.command == "store":
         from mnemo.sdk.python.client import MemoriClient
+
         client = MemoriClient(base_url=args.url, agent_id=args.agent)
         mem_id = client.store(args.content, memory_type=args.type)
         print(mem_id)
     elif args.command == "recall":
         from mnemo.sdk.python.client import MemoriClient
+
         client = MemoriClient(base_url=args.url, agent_id=args.agent)
         results = client.recall(args.query, top_k=args.top_k)
         for i, r in enumerate(results, 1):

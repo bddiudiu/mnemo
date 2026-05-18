@@ -94,10 +94,12 @@ class SemanticMemory:
         neighbors = []
         for neighbor in nx.descendants_at_distance(self.graph, entity_id, 1):
             edge_data = self.graph.get_edge_data(entity_id, neighbor) or {}
-            neighbors.append({
-                "id": neighbor,
-                **dict(self.graph.nodes[neighbor]),
-                "relation": edge_data.get("type", "related_to"),
-            })
+            neighbors.append(
+                {
+                    "id": neighbor,
+                    **dict(self.graph.nodes[neighbor]),
+                    "relation": edge_data.get("type", "related_to"),
+                }
+            )
 
         return {"entity": entity, "neighbors": neighbors}

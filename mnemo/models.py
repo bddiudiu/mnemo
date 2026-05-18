@@ -19,10 +19,11 @@ from sqlalchemy.orm import DeclarativeBase
 
 # ── Enums ──────────────────────────────────────────────────────────
 
+
 class MemoryType(str, Enum):
-    WORKING = "working"       # Current session context
-    EPISODIC = "episodic"     # Historical session events
-    SEMANTIC = "semantic"     # Entities and relationships
+    WORKING = "working"  # Current session context
+    EPISODIC = "episodic"  # Historical session events
+    SEMANTIC = "semantic"  # Entities and relationships
 
 
 class SessionStatus(str, Enum):
@@ -32,8 +33,10 @@ class SessionStatus(str, Enum):
 
 # ── Request / Response Models ──────────────────────────────────────
 
+
 class MemoryCreate(BaseModel):
     """Request: store a new memory."""
+
     session_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     agent_id: str = "default"
     content: str = Field(..., min_length=1, max_length=32768)
@@ -45,6 +48,7 @@ class MemoryCreate(BaseModel):
 
 class MemoryRecallRequest(BaseModel):
     """Request: recall memories by query."""
+
     agent_id: str = "default"
     session_id: Optional[str] = None
     query: str = Field(..., min_length=1)
@@ -55,6 +59,7 @@ class MemoryRecallRequest(BaseModel):
 
 class MemorySearchRequest(BaseModel):
     """Request: full-text / keyword search."""
+
     agent_id: str = "default"
     query: str = Field(..., min_length=1)
     memory_type: Optional[MemoryType] = None
@@ -63,6 +68,7 @@ class MemorySearchRequest(BaseModel):
 
 class MemoryResponse(BaseModel):
     """Response: a single memory record."""
+
     id: str
     session_id: str
     agent_id: str
@@ -84,6 +90,7 @@ class MemoryListResponse(BaseModel):
 
 class SessionCreate(BaseModel):
     """Request: create a new session."""
+
     agent_id: str = "default"
     max_context_tokens: int = 65536
 
@@ -102,9 +109,10 @@ class SessionResponse(BaseModel):
 
 class RecallResult(BaseModel):
     """A single recall hit with relevance score."""
+
     memory: MemoryResponse
-    score: float                    # 0-1 relevance
-    recall_layer: str               # "working" | "episodic" | "semantic"
+    score: float  # 0-1 relevance
+    recall_layer: str  # "working" | "episodic" | "semantic"
 
 
 class RecallResponse(BaseModel):
@@ -129,6 +137,7 @@ class HealthResponse(BaseModel):
 
 
 # ── SQLAlchemy ORM Models ──────────────────────────────────────────
+
 
 class Base(DeclarativeBase):
     pass

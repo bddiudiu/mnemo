@@ -21,6 +21,7 @@ class LocalEmbedder:
         if self._model is None:
             try:
                 from sentence_transformers import SentenceTransformer
+
                 self._model = SentenceTransformer(self.model_name)
                 logger.info("Loaded local embedding model: %s", self.model_name)
             except ImportError:

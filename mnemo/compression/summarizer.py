@@ -42,7 +42,9 @@ class Summarizer:
             try:
                 return await self._llm_compress(messages)
             except Exception as e:
-                logger.warning("LLM compression failed (%s), falling back to extractive", e)
+                logger.warning(
+                    "LLM compression failed (%s), falling back to extractive", e
+                )
 
         return self._extractive_summary(messages)
 

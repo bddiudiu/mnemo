@@ -19,8 +19,10 @@ def get_vector_store():
         backend = config.vector_backend
         if backend == "lance":
             from mnemo.storage.vector_store import LanceDBStore
+
             _vector_store = LanceDBStore()
         else:
             from mnemo.storage.vector_store import ChromaStore
+
             _vector_store = ChromaStore()
     return _vector_store

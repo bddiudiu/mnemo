@@ -84,10 +84,14 @@ class LanceDBStore(VectorStore):
     async def init(self) -> None:
         raise NotImplementedError("LanceDB store not yet implemented")
 
-    async def insert(self, memory_id: str, embedding: list[float], metadata: dict) -> str:
+    async def insert(
+        self, memory_id: str, embedding: list[float], metadata: dict
+    ) -> str:
         raise NotImplementedError
 
-    async def search(self, query_embedding: list[float], top_k: int = 10, filter_dict=None):
+    async def search(
+        self, query_embedding: list[float], top_k: int = 10, filter_dict=None
+    ):
         raise NotImplementedError
 
     async def delete(self, memory_id: str) -> bool:

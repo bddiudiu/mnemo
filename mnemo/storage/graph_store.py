@@ -24,6 +24,7 @@ class NetworkXGraphStore(GraphStore):
 
     async def init(self) -> None:
         import networkx as nx
+
         self._graph = nx.DiGraph()
         logger.info("NetworkX graph store initialized")
 
@@ -47,7 +48,9 @@ class NetworkXGraphStore(GraphStore):
     ) -> None:
         if self._graph is None:
             await self.init()
-        self._graph.add_edge(source_id, target_id, type=relation_type, **(properties or {}))
+        self._graph.add_edge(
+            source_id, target_id, type=relation_type, **(properties or {})
+        )
 
     async def get_entity(self, entity_id: str) -> Optional[dict]:
         if self._graph is None:

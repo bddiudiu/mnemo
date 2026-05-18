@@ -53,15 +53,15 @@ class WorkingMemory:
         session = await self.store.get_session(session_id)
         if session:
             new_tokens = session.current_tokens + token_count
-            await self.store.update_session(
-                session_id, current_tokens=new_tokens
-            )
+            await self.store.update_session(session_id, current_tokens=new_tokens)
 
             # Check compress threshold
             if new_tokens > self.max_tokens * self.compress_threshold:
                 logger.info(
                     "Session %s at %d/%d tokens — triggering auto-compress",
-                    session_id, new_tokens, self.max_tokens,
+                    session_id,
+                    new_tokens,
+                    self.max_tokens,
                 )
                 await self._auto_compress(session_id)
 
@@ -121,6 +121,7 @@ class WorkingMemory:
 
         # Store summary as episodic memory
         from mnemo.models import MemoryRecord
+
         summary_record = MemoryRecord(
             session_id=session_id,
             agent_id=session.agent_id,
@@ -140,7 +141,10 @@ class WorkingMemory:
         )
         logger.info(
             "Session %s auto-compressed: %d messages → summary (tokens: %d → %d)",
-            session_id, len(to_compress), session.current_tokens, new_tokens,
+            session_id,
+            len(to_compress),
+            session.current_tokens,
+            new_tokens,
         )
 
     @staticmethod

@@ -32,26 +32,31 @@ class EntityExtractor:
     # Patterns for common agent memory statements
     _PATTERNS = [
         # Preference: User prefers/likes/wants...
-        (r"(?:user|customer|client)\s+(?:prefers?|likes?|wants?|hates?|dislikes?)\s+(.+?)(?:\.|;|$)",
-         "preference"),
+        (
+            r"(?:user|customer|client)\s+(?:prefers?|likes?|wants?|hates?|dislikes?)\s+(.+?)(?:\.|;|$)",
+            "preference",
+        ),
         # Important fact
-        (r"(?:important|note|remember)\s*[:\-]?\s*(.+?)(?:\.|;|$)",
-         "fact"),
+        (r"(?:important|note|remember)\s*[:\-]?\s*(.+?)(?:\.|;|$)", "fact"),
         # Environment / tech stack
-        (r"(?:production|staging|dev|local)\s+(?:database|db|server|api|env|environment)\s+(?:is|uses?)\s+(.+?)(?:\.|;|$)",
-         "environment"),
+        (
+            r"(?:production|staging|dev|local)\s+(?:database|db|server|api|env|environment)\s+(?:is|uses?)\s+(.+?)(?:\.|;|$)",
+            "environment",
+        ),
         # API key / credentials (masked)
-        (r"(?:api[_\-]?key|token|credential|password)\s*[:=]\s*(.+?)(?:\.|;|$)",
-         "credential"),
+        (
+            r"(?:api[_\-]?key|token|credential|password)\s*[:=]\s*(.+?)(?:\.|;|$)",
+            "credential",
+        ),
         # Version numbers
-        (r"(?:version|v)\s*[:=]?\s*(\d+(?:\.\d+)*)",
-         "version"),
+        (r"(?:version|v)\s*[:=]?\s*(\d+(?:\.\d+)*)", "version"),
         # Persona / role
-        (r"(?:user|they|he|she)\s+(?:is|works? as|role is)\s+(?:an?\s+)?(.+?)(?:\.|;|$)",
-         "persona"),
+        (
+            r"(?:user|they|he|she)\s+(?:is|works? as|role is)\s+(?:an?\s+)?(.+?)(?:\.|;|$)",
+            "persona",
+        ),
         # Constraint / requirement
-        (r"(?:must|should|need|require)\s+(?:to\s+)?(.+?)(?:\.|;|$)",
-         "constraint"),
+        (r"(?:must|should|need|require)\s+(?:to\s+)?(.+?)(?:\.|;|$)", "constraint"),
     ]
 
     def __init__(self, api_key: Optional[str] = None):
@@ -72,11 +77,13 @@ class EntityExtractor:
                 raw = raw.rstrip(".,;:!?")
                 if len(raw) < 2:
                     continue
-                entities.append({
-                    "name": raw,
-                    "type": entity_type,
-                    "confidence": 0.7,
-                })
+                entities.append(
+                    {
+                        "name": raw,
+                        "type": entity_type,
+                        "confidence": 0.7,
+                    }
+                )
 
         # Deduplicate by name
         seen = set()
@@ -123,8 +130,15 @@ class EntityExtractor:
                 data = resp.json()
                 content = data["choices"][0]["message"]["content"]
                 import json
+
                 parsed = json.loads(content)
-                return parsed.get("entities", parsed) if isinstance(parsed, dict) else parsed
+                return (
+                    parsed.get("entities", parsed)
+                    if isinstance(parsed, dict)
+                    else parsed
+                )
         except Exception as e:
-            logger.warning("LLM entity extraction failed: %s. Falling back to rule-based.", e)
+            logger.warning(
+                "LLM entity extraction failed: %s. Falling back to rule-based.", e
+            )
             return self.extract(text)

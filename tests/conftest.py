@@ -14,6 +14,7 @@ def anyio_backend():
 async def cleanup_db():
     """Clear all tables before each integration test to ensure isolation."""
     from sqlalchemy import text
+
     try:
         async with relational_store.session_factory() as session:
             await session.execute(text("DELETE FROM memories"))
