@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  mnemo:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - MEMORI_STORAGE_BACKEND=chroma
+      - MEMORI_EMBEDDING_PROVIDER=local
+      - MEMORI_LOG_LEVEL=INFO
+    volumes:
+      - mnemo_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8080/api/v1/health').raise_for_status()"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mnemo_data:
