@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
@@ -27,11 +27,11 @@ jobs:
 
       - name: Lint with ruff
         run: |
-          ruff check memori/ tests/
+          ruff check mnemo/ tests/
 
       - name: Format check with black
         run: |
-          black --check memori/ tests/
+          black --check mnemo/ tests/
 
       - name: Run tests
         run: |
@@ -43,10 +43,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker image
-        run: docker build -t memori .
+        run: docker build -t mnemo .
       - name: Verify health
         run: |
-          docker run -d -p 8080:8080 --name memori-test memori
+          docker run -d -p 8080:8080 --name mnemo-test mnemo
           sleep 5
           curl -f http://localhost:8080/api/v1/health
-          docker stop memori-test
+          docker stop mnemo-test
