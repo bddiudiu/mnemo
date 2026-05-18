@@ -11,8 +11,7 @@ Environment variables override defaults:
 """
 
 import os
-from dataclasses import dataclass, field
-
+from dataclasses import dataclass
 
 @dataclass
 class Config:

@@ -1,4 +1,4 @@
-"""Core data models for memori.
+"""Core data models for mnemo.
 
 All models are Pydantic v2 for FastAPI integration + SQLAlchemy
 for persistence. The in-memory types use dataclasses for lightweight
@@ -13,6 +13,8 @@ from enum import Enum
 from typing import Any, Optional
 
 from pydantic import BaseModel, Field
+from sqlalchemy import Column, String, Float, Integer, DateTime, Text, JSON
+from sqlalchemy.orm import DeclarativeBase
 
 
 # ── Enums ──────────────────────────────────────────────────────────
@@ -127,12 +129,6 @@ class HealthResponse(BaseModel):
 
 
 # ── SQLAlchemy ORM Models ──────────────────────────────────────────
-
-from sqlalchemy import (
-    Column, String, Float, Integer, DateTime, Text, JSON, Enum as SAEnum,
-)
-from sqlalchemy.orm import DeclarativeBase
-
 
 class Base(DeclarativeBase):
     pass

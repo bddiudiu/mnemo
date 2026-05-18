@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from memori import __version__
+from mnemo import __version__
 from mnemo.config import config
 from mnemo.models import HealthResponse
 

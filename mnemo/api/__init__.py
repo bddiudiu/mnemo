@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from memori import __version__
+from mnemo import __version__
 from mnemo.api.middleware import RateLimitMiddleware, AuthMiddleware
 from mnemo.api.routes import health, memory, session
 from mnemo.storage import relational_store

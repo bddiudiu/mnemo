@@ -1,7 +1,6 @@
 """Test configuration and shared fixtures."""
 
 import pytest
-import pytest_asyncio
 
 from mnemo.storage import relational_store
 

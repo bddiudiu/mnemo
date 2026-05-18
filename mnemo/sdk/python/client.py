@@ -12,8 +12,6 @@ from typing import Any, Optional
 
 import httpx
 
-from mnemo.models import MemoryType
-
 logger = logging.getLogger(__name__)
 
 
@@ -35,7 +33,7 @@ class MnemoClient:
         self.base_url = base_url.rstrip("/")
         self.agent_id = agent_id
         self.api_key = api_key
-        self._client: httpx.Optional[Client] = None
+        self._client: Optional[httpx.Client] = None
 
     @property
     def client(self) -> httpx.Client:

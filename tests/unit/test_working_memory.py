@@ -1,6 +1,4 @@
-"""Unit tests for working memory."""
-
-import pytest
+"""Tests for Working Memory logic."""
 
 from mnemo.core.working_memory import WorkingMemory
 

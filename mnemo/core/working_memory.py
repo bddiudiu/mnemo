@@ -11,7 +11,7 @@ import logging
 from typing import Optional
 
 from mnemo.config import config
-from mnemo.models import MemoryRecord, SessionRecord
+from mnemo.models import MemoryRecord
 from mnemo.storage.base import RelationalStore
 
 logger = logging.getLogger(__name__)

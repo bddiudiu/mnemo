@@ -12,7 +12,6 @@ from typing import Optional
 
 import networkx as nx
 
-from mnemo.config import config
 from mnemo.storage.base import GraphStore, RelationalStore
 
 logger = logging.getLogger(__name__)

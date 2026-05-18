@@ -7,14 +7,14 @@ import pytest
 from starlette.testclient import TestClient
 
 from mnemo.api import app
-from mnemo.sdk.python.client import MemoriClient
+from mnemo.sdk.python.client import MnemoClient
 
 
 @pytest.fixture
 def client():
-    """Yield a MemoriClient wired to a TestClient."""
+    """Yield a MnemoClient wired to a TestClient."""
     http_client = TestClient(app)
-    sdk = MemoriClient(base_url="http://test", agent_id="test-agent")
+    sdk = MnemoClient(base_url="http://test", agent_id="test-agent")
     sdk._client = http_client
     yield sdk
 
@@ -67,7 +67,7 @@ def test_search(client):
 def test_list(client):
     """Test listing memories with pagination."""
     # Use a unique agent to avoid interference from other tests
-    list_client = MemoriClient(base_url="http://test", agent_id="list-only-agent")
+    list_client = MnemoClient(base_url="http://test", agent_id="list-only-agent")
     list_client._client = client._client
 
     for i in range(5):

@@ -3,8 +3,6 @@
 import logging
 from typing import Optional
 
-from datetime import datetime, timezone
-
 from fastapi import APIRouter, HTTPException, Query
 
 from mnemo.models import (

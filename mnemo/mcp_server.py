@@ -133,7 +133,7 @@ class MemoriMCPServer:
     def __init__(self, base_url: str = "http://localhost:8080"):
         self.base_url = base_url.rstrip("/")
         self.transport = MCPTransport()
-        self._http: httpx.Optional[AsyncClient] = None
+        self._http: Optional[httpx.AsyncClient] = None
 
     @property
     def http(self) -> httpx.AsyncClient:
